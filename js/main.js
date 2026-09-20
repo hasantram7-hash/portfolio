@@ -65,7 +65,9 @@ function formatUpdatedAt(value) {
 }
 
 function render(content) {
-  const safeContent = content || DEFAULT_CONTENT;
+  const safeContent = typeof normalizePortfolioData === "function"
+    ? normalizePortfolioData(content || DEFAULT_CONTENT)
+    : (content || DEFAULT_CONTENT);
   const p = safeContent.profile || DEFAULT_CONTENT.profile;
   const about = safeContent.about || DEFAULT_CONTENT.about;
   const stats = Array.isArray(safeContent.stats) ? safeContent.stats : (Array.isArray(about.stats) ? about.stats : DEFAULT_CONTENT.stats);
@@ -85,7 +87,7 @@ function render(content) {
   document.getElementById("term-status").textContent = safeContent.status?.text || "available for opportunities";
 
   const heroPhoto = document.getElementById("hero-photo");
-  heroPhoto.src = p.photo || "assets/profile-fallback.svg";
+  heroPhoto.src = p.photo || "./assets/profile.jpg";
   heroPhoto.onerror = () => {
     heroPhoto.onerror = null;
     heroPhoto.src = "assets/profile-fallback.svg";

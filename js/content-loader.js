@@ -2,7 +2,7 @@
    DEFAULT_CONTENT when Firebase isn't configured or a field is missing. */
 
 function deepMerge(base, override) {
-  if (!override) return base;
+  if (!override || typeof override !== "object") return base;
   const out = Array.isArray(base) ? [...base] : { ...base };
   for (const key in override) {
     if (
@@ -17,38 +17,62 @@ function deepMerge(base, override) {
   return out;
 }
 
+function hasValue(value) {
+  return value !== undefined && value !== null && (!Array.isArray(value) || value.length > 0) && (typeof value !== "string" || value.trim() !== "");
+}
+
+function firstValue(...values) {
+  return values.find(hasValue);
+}
+
+function mergeArrayDefaults(defaultItems, value) {
+  if (!Array.isArray(value) || value.length === 0) return defaultItems;
+  return value.map((item, index) => {
+    const defaultItem = defaultItems[index] || {};
+    return item && typeof item === "object" ? deepMerge(defaultItem, item) : item;
+  });
+}
+
 function normalizePortfolioData(data) {
   if (!data || typeof data !== "object") return DEFAULT_CONTENT;
 
-  const profile = data.profile || {
-    name: data.name || DEFAULT_CONTENT.profile.name,
-    role: data.role || DEFAULT_CONTENT.profile.role,
-    location: data.location || DEFAULT_CONTENT.profile.location,
-    tagline: data.tagline || DEFAULT_CONTENT.profile.tagline,
-    photo: data.photo || DEFAULT_CONTENT.profile.photo,
-    email: data.email || DEFAULT_CONTENT.profile.email,
-    resumeUrl: data.resumeUrl || DEFAULT_CONTENT.profile.resumeUrl
+  const rawProfile = data.profile && typeof data.profile === "object" ? data.profile : {};
+  const profile = {
+    name: firstValue(rawProfile.name, data.name, DEFAULT_CONTENT.profile.name),
+    role: firstValue(rawProfile.role, data.role, DEFAULT_CONTENT.profile.role),
+    location: firstValue(rawProfile.location, data.location, DEFAULT_CONTENT.profile.location),
+    tagline: firstValue(rawProfile.tagline, data.tagline, DEFAULT_CONTENT.profile.tagline),
+    photo: firstValue(rawProfile.photo, data.photo, DEFAULT_CONTENT.profile.photo),
+    email: firstValue(rawProfile.email, data.email, DEFAULT_CONTENT.profile.email),
+    resumeUrl: firstValue(rawProfile.resumeUrl, data.resumeUrl, DEFAULT_CONTENT.profile.resumeUrl)
   };
 
   const aboutParagraphs = Array.isArray(data.about?.paragraphs)
-    ? data.about.paragraphs
+    && data.about.paragraphs.length > 0
+      ? data.about.paragraphs
     : Array.isArray(data.paragraphs)
-      ? data.paragraphs
+      && data.paragraphs.length > 0
+        ? data.paragraphs
       : DEFAULT_CONTENT.about.paragraphs;
 
   const stats = Array.isArray(data.stats)
-    ? data.stats
+    && data.stats.length > 0
+      ? data.stats
     : Array.isArray(data.about?.stats)
-      ? data.about.stats
+      && data.about.stats.length > 0
+        ? data.about.stats
       : DEFAULT_CONTENT.stats;
 
   const about = {
     paragraphs: aboutParagraphs
   };
 
-  const status = data.status && typeof data.status === "object"
-    ? { ...DEFAULT_CONTENT.status, ...data.status }
-    : { text: data.current_focus || data.status || DEFAULT_CONTENT.status.text };
+  const rawStatus = data.status && typeof data.status === "object" ? data.status : {};
+  const status = {
+    ...DEFAULT_CONTENT.status,
+    ...rawStatus,
+    text: firstValue(rawStatus.text, data.current_focus, typeof data.status === "string" ? data.status : "", DEFAULT_CONTENT.status.text)
+  };
 
   return deepMerge(DEFAULT_CONTENT, {
     ...data,
@@ -56,11 +80,11 @@ function normalizePortfolioData(data) {
     about,
     stats,
     status,
-    skills: Array.isArray(data.skills) ? data.skills : DEFAULT_CONTENT.skills,
-    projects: Array.isArray(data.projects) ? data.projects : DEFAULT_CONTENT.projects,
-    certificates: Array.isArray(data.certificates) ? data.certificates : DEFAULT_CONTENT.certificates,
-    socials: Array.isArray(data.socials) ? data.socials : DEFAULT_CONTENT.socials,
-    timeline: Array.isArray(data.timeline) ? data.timeline : DEFAULT_CONTENT.timeline
+    skills: mergeArrayDefaults(DEFAULT_CONTENT.skills, data.skills),
+    projects: mergeArrayDefaults(DEFAULT_CONTENT.projects, data.projects),
+    certificates: mergeArrayDefaults(DEFAULT_CONTENT.certificates, data.certificates),
+    socials: mergeArrayDefaults(DEFAULT_CONTENT.socials, data.socials),
+    timeline: mergeArrayDefaults(DEFAULT_CONTENT.timeline, data.timeline)
   });
 }
 
@@ -81,7 +105,7 @@ window.getContent = async function () {
       }
     }
 
-    return merged;
+    return normalizePortfolioData(merged);
   } catch (e) {
     console.warn("Could not load live content, using defaults.", e);
     return DEFAULT_CONTENT;
