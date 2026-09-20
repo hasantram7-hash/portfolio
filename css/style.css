@@ -5,61 +5,61 @@
    ============================================================ */
 
 :root, [data-theme='light']{
-  --bg:            #f4f8fb;
-  --bg-soft:       #e8f0f4;
-  --panel:         rgba(255, 255, 255, 0.72);
-  --panel-border:  rgba(25, 75, 95, 0.14);
-  --panel-border-strong: rgba(25, 75, 95, 0.32);
-  --accent:        #0e9c82;
-  --accent-2:      #6657d9;
-  --accent-dim:    rgba(14, 156, 130, 0.14);
-  --text:          #15232d;
-  --text-dim:      #526673;
-  --text-faint:    #718591;
-  --danger:        #d94b5b;
-  --canvas-rgb:    14, 156, 130;
-  --canvas-glow:   rgba(14, 156, 130, 0.08);
+  --bg: #f5f7fa;
+  --bg-soft: #eef1f6;
+  --panel: rgba(255, 255, 255, 0.7);
+  --panel-border: rgba(0, 0, 0, 0.08);
+  --panel-border-strong: rgba(0, 0, 0, 0.15);
+  --accent: #0e9c82;
+  --accent-2: #6c5ce7;
+  --accent-dim: rgba(14, 156, 130, 0.12);
+  --text: #1a2332;
+  --text-dim: #4a5568;
+  --text-faint: #8896a8;
+  --danger: #e74c3c;
+  --canvas-rgb: 14, 156, 130;
+  --canvas-glow: rgba(14, 156, 130, 0.08);
   --canvas-glow-2: rgba(102, 87, 217, 0.08);
-  --nav-bg:        rgba(244, 248, 251, 0.72);
+  --nav-bg: rgba(244, 248, 251, 0.72);
   --mobile-nav-bg: rgba(244, 248, 251, 0.97);
-  --terminal-dot:  #9aadb7;
-  --button-text:   #ffffff;
-  --bar-track:     rgba(25, 75, 95, 0.10);
-  --bot-message:   rgba(25, 75, 95, 0.07);
+  --terminal-dot: #9aadb7;
+  --button-text: #ffffff;
+  --bar-track: rgba(25, 75, 95, 0.10);
+  --bot-message: rgba(25, 75, 95, 0.07);
   --modal-backdrop: rgba(21, 35, 45, 0.48);
-  --case-panel:    rgba(25, 75, 95, 0.04);
+  --case-panel: rgba(25, 75, 95, 0.04);
   --accent-shadow: rgba(14, 156, 130, 0.30);
-  --field-bg:      rgba(255, 255, 255, 0.58);
-  --save-bar-bg:   rgba(244, 248, 251, 0.90);
+  --field-bg: rgba(255, 255, 255, 0.58);
+  --save-bar-bg: rgba(244, 248, 251, 0.90);
 }
 
 [data-theme='dark']{
-  --bg:            #05070b;
-  --bg-soft:       #0a0e14;
-  --panel:         rgba(16, 22, 32, 0.55);
-  --panel-border:  rgba(120, 200, 255, 0.14);
+  --bg: #05070b;
+  --bg-soft: #0a0e14;
+  --panel: rgba(16, 22, 32, 0.55);
+  --panel-border: rgba(120, 200, 255, 0.14);
   --panel-border-strong: rgba(120, 200, 255, 0.32);
-  --accent:        #46e5c2;
-  --accent-2:      #8a7bff;
-  --accent-dim:    rgba(70, 229, 194, 0.15);
-  --text:          #e7edf5;
-  --text-dim:      #93a1b5;
-  --text-faint:    #5c6a80;
-  --danger:        #ff6b6b;
-  --canvas-rgb:    70, 229, 194;
-  --canvas-glow:   rgba(70, 229, 194, 0.06);
+  --accent: #46e5c2;
+  --accent-2: #8a7bff;
+  --accent-dim: rgba(70, 229, 194, 0.15);
+  --text: #e7edf5;
+  --text-dim: #93a1b5;
+  --text-faint: #5c6a80;
+  --danger: #ff6b6b;
+  --canvas-rgb: 70, 229, 194;
+  --canvas-glow: rgba(70, 229, 194, 0.06);
   --canvas-glow-2: rgba(138, 123, 255, 0.07);
-  --nav-bg:        rgba(5, 7, 11, 0.55);
+  --nav-bg: rgba(5, 7, 11, 0.55);
   --mobile-nav-bg: rgba(5, 7, 11, 0.97);
-  --terminal-dot:  #3a4356;
-  --button-text:   #04120e;
-  --bar-track:     rgba(255, 255, 255, 0.06);
-  --bot-message:   rgba(255, 255, 255, 0.05);
+  --terminal-dot: #3a4356;
+  --button-text: #04120e;
+  --bar-track: rgba(255, 255, 255, 0.06);
+  --bot-message: rgba(255, 255, 255, 0.05);
   --modal-backdrop: rgba(5, 7, 11, 0.72);
-  --case-panel:    rgba(255, 255, 255, 0.025);
+  --case-panel: rgba(255, 255, 255, 0.025);
   --accent-shadow: rgba(70, 229, 194, 0.35);
-  --field-bg:      rgba(255, 255, 255, 0.04);
-  --save-bar-bg:   rgba(5, 7, 11, 0.90);
+  --field-bg: rgba(255, 255, 255, 0.04);
+  --save-bar-bg: rgba(5, 7, 11, 0.90);
 }
 
 :root{

@@ -68,13 +68,14 @@ function render(content) {
   const safeContent = content || DEFAULT_CONTENT;
   const p = safeContent.profile || DEFAULT_CONTENT.profile;
   const about = safeContent.about || DEFAULT_CONTENT.about;
+  const stats = Array.isArray(safeContent.stats) ? safeContent.stats : (Array.isArray(about.stats) ? about.stats : DEFAULT_CONTENT.stats);
   const projects = (safeContent.projects || DEFAULT_CONTENT.projects).map(normalizeProject);
   const skills = safeContent.skills || DEFAULT_CONTENT.skills;
   const certificates = safeContent.certificates || DEFAULT_CONTENT.certificates;
   const socials = safeContent.socials || DEFAULT_CONTENT.socials;
   const timeline = safeContent.timeline || DEFAULT_CONTENT.timeline;
 
-  document.documentElement.setAttribute("data-theme", safeContent.theme === "dark" ? "dark" : "light");
+  document.documentElement.setAttribute("data-theme", safeContent.theme || "light");
   document.title = `${p.name} — ${p.role}`;
   document.getElementById("hero-name").textContent = p.name;
   document.getElementById("hero-lede").textContent = p.tagline;
@@ -103,7 +104,7 @@ function render(content) {
   const aboutWrap = document.getElementById("about-text");
   aboutWrap.innerHTML = (about.paragraphs || []).map(t => `<p>${t}</p>`).join("");
   const statRow = document.getElementById("stat-row");
-  statRow.innerHTML = (about.stats || []).map(s => `
+  statRow.innerHTML = (stats || []).map(s => `
     <div class="stat glass"><b>${s.value}</b><span>${s.label}</span></div>
   `).join("");
 

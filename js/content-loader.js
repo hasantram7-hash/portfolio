@@ -30,19 +30,31 @@ function normalizePortfolioData(data) {
     resumeUrl: data.resumeUrl || DEFAULT_CONTENT.profile.resumeUrl
   };
 
-  const about = data.about || {
-    paragraphs: Array.isArray(data.aboutParagraphs) ? data.aboutParagraphs : DEFAULT_CONTENT.about.paragraphs,
-    stats: Array.isArray(data.aboutStats) ? data.aboutStats : DEFAULT_CONTENT.about.stats
+  const aboutParagraphs = Array.isArray(data.about?.paragraphs)
+    ? data.about.paragraphs
+    : Array.isArray(data.paragraphs)
+      ? data.paragraphs
+      : DEFAULT_CONTENT.about.paragraphs;
+
+  const stats = Array.isArray(data.stats)
+    ? data.stats
+    : Array.isArray(data.about?.stats)
+      ? data.about.stats
+      : DEFAULT_CONTENT.stats;
+
+  const about = {
+    paragraphs: aboutParagraphs
   };
 
-  const status = data.status || {
-    text: data.current_focus || DEFAULT_CONTENT.status.text
-  };
+  const status = data.status && typeof data.status === "object"
+    ? { ...DEFAULT_CONTENT.status, ...data.status }
+    : { text: data.current_focus || data.status || DEFAULT_CONTENT.status.text };
 
   return deepMerge(DEFAULT_CONTENT, {
     ...data,
     profile,
     about,
+    stats,
     status,
     skills: Array.isArray(data.skills) ? data.skills : DEFAULT_CONTENT.skills,
     projects: Array.isArray(data.projects) ? data.projects : DEFAULT_CONTENT.projects,
@@ -53,16 +65,20 @@ function normalizePortfolioData(data) {
 }
 
 window.getContent = async function () {
-  if (!firebaseReady) return DEFAULT_CONTENT;
+  if (!firebaseReady || !db) return DEFAULT_CONTENT;
 
   try {
     const candidateDocs = ["content", "site", "hero", "about", "profile", "portfolio"];
     let merged = { ...DEFAULT_CONTENT };
 
     for (const docId of candidateDocs) {
-      const doc = await db.collection("portfolio").doc(docId).get();
-      if (!doc.exists) continue;
-      merged = normalizePortfolioData(deepMerge(merged, doc.data()));
+      try {
+        const doc = await db.collection("portfolio").doc(docId).get();
+        if (!doc.exists) continue;
+        merged = normalizePortfolioData(deepMerge(merged, doc.data()));
+      } catch (err) {
+        console.warn(`Skipped Firestore document ${docId}:`, err);
+      }
     }
 
     return merged;

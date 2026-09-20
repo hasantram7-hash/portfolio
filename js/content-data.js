@@ -26,13 +26,14 @@ const DEFAULT_CONTENT = {
       "I'm 17, in class 11, and I've been obsessed with computers since class 9-10 — long before anyone around me was pushing me toward it. Nobody at home really supported the screen time, so most of what I know, I picked up on my own: late nights on YouTube, docs, and just breaking things until they worked.",
       "I started with basic HTML/CSS, built small games, then kept going — WordPress, PHP, Firebase, Vercel, Android Studio, and now I'm comfortable shipping full projects end to end. I'm also deep into the AI side of things: prompt engineering, AI agents, and using AI tools inside my own workflow for video and content creation.",
       "I'm an average student on paper — but outside the classroom, this is where I actually perform."
-    ],
-    stats: [
-      { value: "17", label: "years old" },
-      { value: "8+", label: "years exploring tech" },
-      { value: "6+", label: "projects shipped" }
     ]
   },
+
+  stats: [
+    { value: "17", label: "years old" },
+    { value: "8+", label: "years exploring tech" },
+    { value: "6+", label: "projects shipped" }
+  ],
 
   timeline: [
     { year: "Class 9-10", title: "First lines of code", text: "Started with HTML/CSS, built small websites and browser games like a Flappy Bird clone just for fun." },
