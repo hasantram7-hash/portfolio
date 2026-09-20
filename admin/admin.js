@@ -187,11 +187,29 @@ function readProjects() {
   });
 }
 
+function deepMergeAdmin(base, override) {
+  const out = { ...(base || {}) };
+  for (const key in (override || {})) {
+    const value = override[key];
+    if (value === "" || value === null || value === undefined) continue;
+    if (Array.isArray(value) && value.length === 0) continue;
+    if (
+      value && typeof value === "object" && !Array.isArray(value) &&
+      out[key] && typeof out[key] === "object" && !Array.isArray(out[key])
+    ) {
+      out[key] = deepMergeAdmin(out[key], value);
+    } else {
+      out[key] = value;
+    }
+  }
+  return out;
+}
+
 /* ---------- gather + save ---------- */
 async function saveAll() {
   const status = document.getElementById("save-status");
   status.textContent = "Saving...";
-  const data = {
+  const formData = {
     theme: document.querySelector("[data-theme-btn].active")?.dataset.themeBtn || "light",
     profile: {
       name: document.getElementById("p-name").value,
@@ -220,8 +238,16 @@ async function saveAll() {
 
   try {
     if (!firebaseReady || !appDb) throw new Error("Firebase not configured");
-    await appDb.collection("portfolio").doc("content").set(data, { merge: true });
-    await appDb.collection("portfolio").doc("site").set(data, { merge: true });
+    const siteRef = appDb.collection("portfolio").doc("site");
+    const contentRef = appDb.collection("portfolio").doc("content");
+    const siteSnapshot = await siteRef.get();
+    const contentSnapshot = await contentRef.get();
+    const existing = siteSnapshot.exists
+      ? siteSnapshot.data()
+      : (contentSnapshot.exists ? contentSnapshot.data() : {});
+    const merged = deepMergeAdmin(existing, formData);
+    await siteRef.set(merged, { merge: true });
+    await contentRef.set(merged, { merge: true });
     status.textContent = "Saved ✓ — live on the site now.";
   } catch (e) {
     console.error(e);
@@ -235,9 +261,12 @@ async function saveAll() {
   if (firebaseReady && appDb) {
     try {
       const contentDoc = await appDb.collection("portfolio").doc("content").get();
-      const legacyDoc = contentDoc.exists ? null : await appDb.collection("portfolio").doc("site").get();
-      const snapshot = contentDoc.exists ? contentDoc : legacyDoc;
-      populate(snapshot && snapshot.exists ? { ...DEFAULT_CONTENT, ...snapshot.data() } : DEFAULT_CONTENT);
+      const siteDoc = await appDb.collection("portfolio").doc("site").get();
+      const liveData = deepMergeAdmin(
+        contentDoc.exists ? contentDoc.data() : {},
+        siteDoc.exists ? siteDoc.data() : {}
+      );
+      populate(deepMergeAdmin(DEFAULT_CONTENT, liveData));
       return;
     } catch (e) { console.warn(e); }
   }

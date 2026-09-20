@@ -5,30 +5,30 @@
    ============================================================ */
 
 :root, [data-theme='light']{
-  --bg: #f5f7fa;
-  --bg-soft: #eef1f6;
-  --panel: rgba(255, 255, 255, 0.7);
-  --panel-border: rgba(0, 0, 0, 0.08);
-  --panel-border-strong: rgba(0, 0, 0, 0.15);
-  --accent: #0e9c82;
+  --bg: #f0f4f8;
+  --bg-soft: #e8edf3;
+  --panel: rgba(255, 255, 255, 0.75);
+  --panel-border: rgba(14, 156, 130, 0.15);
+  --panel-border-strong: rgba(14, 156, 130, 0.35);
+  --accent: #0a8f78;
   --accent-2: #6c5ce7;
-  --accent-dim: rgba(14, 156, 130, 0.12);
-  --text: #1a2332;
-  --text-dim: #4a5568;
-  --text-faint: #8896a8;
-  --danger: #e74c3c;
-  --canvas-rgb: 14, 156, 130;
-  --canvas-glow: rgba(14, 156, 130, 0.08);
-  --canvas-glow-2: rgba(102, 87, 217, 0.08);
-  --nav-bg: rgba(244, 248, 251, 0.72);
-  --mobile-nav-bg: rgba(244, 248, 251, 0.97);
+  --accent-dim: rgba(10, 143, 120, 0.12);
+  --text: #0f1a26;
+  --text-dim: #2c3e50;
+  --text-faint: #5a6b7c;
+  --danger: #d63031;
+  --canvas-rgb: 10, 143, 120;
+  --canvas-glow: rgba(10, 143, 120, 0.08);
+  --canvas-glow-2: rgba(108, 92, 231, 0.06);
+  --nav-bg: rgba(240, 244, 248, 0.85);
+  --mobile-nav-bg: rgba(240, 244, 248, 0.97);
   --terminal-dot: #9aadb7;
   --button-text: #ffffff;
   --bar-track: rgba(25, 75, 95, 0.10);
   --bot-message: rgba(25, 75, 95, 0.07);
   --modal-backdrop: rgba(21, 35, 45, 0.48);
   --case-panel: rgba(25, 75, 95, 0.04);
-  --accent-shadow: rgba(14, 156, 130, 0.30);
+  --accent-shadow: rgba(10, 143, 120, 0.25);
   --field-bg: rgba(255, 255, 255, 0.58);
   --save-bar-bg: rgba(244, 248, 251, 0.90);
 }
@@ -393,3 +393,96 @@ footer a{ color: var(--accent); }
   .case-sections{ grid-template-columns:1fr; gap:12px; }
   .activity-card{ padding:20px; }
 }
+
+/* ---------- light theme polish ---------- */
+[data-theme='light'] body{ background:var(--bg); }
+[data-theme='light'] #net-canvas{
+  background:
+    radial-gradient(circle at 20% 15%, rgba(10, 143, 120, 0.08), transparent 45%),
+    radial-gradient(circle at 85% 75%, rgba(108, 92, 231, 0.06), transparent 50%),
+    var(--bg);
+}
+[data-theme='light'] header{
+  background:rgba(240, 244, 248, 0.85);
+  border-bottom:1px solid var(--panel-border);
+}
+[data-theme='light'] .glass{
+  background:rgba(255, 255, 255, 0.7);
+  border:1px solid rgba(10, 143, 120, 0.15);
+  box-shadow:
+    0 4px 20px rgba(10, 143, 120, 0.06),
+    0 1px 3px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+[data-theme='light'] .glass:hover{
+  border-color:var(--panel-border-strong);
+  box-shadow:
+    0 8px 28px rgba(10, 143, 120, 0.12),
+    0 2px 6px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+[data-theme='light'] .terminal .row{ color:var(--text-dim); }
+[data-theme='light'] .terminal .row .v{ color:var(--text); font-weight:500; }
+[data-theme='light'] .terminal .row .k{ color:var(--accent); font-weight:600; }
+[data-theme='light'] .terminal .status{ color:var(--accent); font-weight:600; }
+[data-theme='light'] .stat b{ color:var(--accent); }
+[data-theme='light'] .bar-track{ background:rgba(10, 143, 120, 0.1); }
+[data-theme='light'] .bar-fill{ background:linear-gradient(90deg, var(--accent), var(--accent-2)); }
+[data-theme='light'] .project-card .thumb{
+  background:radial-gradient(circle at 30% 20%, rgba(10, 143, 120, 0.15), transparent 60%), var(--bg-soft);
+}
+[data-theme='light'] .tag{ background:rgba(10, 143, 120, 0.08); color:var(--accent); }
+[data-theme='light'] .social-card .ic{ background:var(--accent-dim); color:var(--accent); }
+[data-theme='light'] .btn.primary{
+  background:var(--accent);
+  color:#ffffff;
+  box-shadow:0 4px 12px rgba(10, 143, 120, 0.25);
+}
+[data-theme='light'] .btn.primary:hover{
+  background:#0a7a66;
+  box-shadow:0 6px 18px rgba(10, 143, 120, 0.35);
+}
+[data-theme='light'] .btn.ghost{ color:var(--text); border-color:var(--panel-border-strong); }
+[data-theme='light'] .btn.ghost:hover{
+  color:var(--accent);
+  border-color:var(--accent);
+  background:var(--accent-dim);
+}
+[data-theme='light'] .photo-frame{ box-shadow:0 8px 32px rgba(10, 143, 120, 0.15); }
+[data-theme='light'] .photo-frame img{ filter:grayscale(0%) contrast(1.02); border:1px solid var(--panel-border); }
+[data-theme='light'] .section-tag{ color:var(--accent); font-weight:600; }
+[data-theme='light'] .nav-links a{ color:var(--text-dim); }
+[data-theme='light'] .nav-links a:hover{ color:var(--accent); }
+[data-theme='light'] .logo{ color:var(--text); font-weight:600; }
+[data-theme='light'] #ai-panel{
+  background:rgba(255, 255, 255, 0.92);
+  box-shadow:0 8px 32px rgba(10, 143, 120, 0.15);
+}
+[data-theme='light'] #ai-panel .msg.bot{ background:rgba(10, 143, 120, 0.08); color:var(--text); }
+[data-theme='light'] #ai-panel .msg.user{ background:var(--accent-dim); color:var(--text); }
+[data-theme='light'] footer{ color:var(--text-faint); border-top:1px solid var(--panel-border); }
+[data-theme='light'] .cursor-dot{ background:var(--accent); box-shadow:0 0 8px var(--accent); }
+[data-theme='light'] .cursor-ring{ border-color:var(--panel-border-strong); }
+[data-theme='light'] .cursor-ring.hover{ border-color:var(--accent); background:var(--accent-dim); }
+[data-theme='light'] .cert-card .ic{ color:var(--accent); }
+[data-theme='light'] .cert-card a{ color:var(--accent-2); }
+[data-theme='light'] .tl-item::before{ background:var(--accent); box-shadow:0 0 0 4px var(--accent-dim); }
+[data-theme='light'] .tl-item .yr{ color:var(--accent); font-weight:600; }
+[data-theme='light'] .project-card:hover,
+[data-theme='light'] .skill-card:hover,
+[data-theme='light'] .cert-card:hover,
+[data-theme='light'] .social-card:hover{
+  border-color:var(--panel-border-strong);
+  box-shadow:
+    0 8px 28px rgba(10, 143, 120, 0.12),
+    0 2px 6px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  transform:translateY(-2px);
+  transition:all 0.25s ease;
+}
+[data-theme='light'] .section-title,
+[data-theme='light'] .identity h1,
+[data-theme='light'] .contact-panel h3{ color:var(--text); font-weight:700; }
+[data-theme='light'] .identity .role-line{ color:var(--accent); font-weight:600; }
+[data-theme='light'] .identity p.lede,
+[data-theme='light'] .contact-panel p{ color:var(--text-dim); }

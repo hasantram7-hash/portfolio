@@ -5,13 +5,16 @@ function deepMerge(base, override) {
   if (!override || typeof override !== "object") return base;
   const out = Array.isArray(base) ? [...base] : { ...base };
   for (const key in override) {
+    const value = override[key];
+    if (value === "" || value === null || value === undefined) continue;
+    if (Array.isArray(value) && value.length === 0) continue;
     if (
-      override[key] && typeof override[key] === "object" &&
-      !Array.isArray(override[key]) && base[key] && typeof base[key] === "object"
+      value && typeof value === "object" &&
+      !Array.isArray(value) && base[key] && typeof base[key] === "object" && !Array.isArray(base[key])
     ) {
-      out[key] = deepMerge(base[key], override[key]);
-    } else if (override[key] !== undefined) {
-      out[key] = override[key];
+      out[key] = deepMerge(base[key], value);
+    } else {
+      out[key] = value;
     }
   }
   return out;
