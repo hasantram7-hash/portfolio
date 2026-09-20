@@ -1,0 +1,16 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /portfolio/{docId} {
+      allow read: if true;
+      allow create, update: if
+        request.auth != null || (
+          docId == "stats" &&
+          request.resource.data.keys().hasOnly(["visits"]) &&
+          request.resource.data.visits is number &&
+          (!resource.exists || request.resource.data.visits == resource.data.visits + 1)
+        );
+      allow delete: if request.auth != null;
+    }
+  }
+}

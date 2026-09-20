@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hem Narayan Ram — Portfolio</title>
+<meta name="description" content="Self-taught developer and digital creator — websites, apps, and AI-assisted tools.">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css?v=20260920">
+</head>
+<body>
+
+<canvas id="net-canvas"></canvas>
+<div class="cursor-dot"></div>
+<div class="cursor-ring"></div>
+
+<div id="boot">
+  <div class="boot-box mono">
+    <span class="cursor-blink"></span>
+  </div>
+</div>
+
+<header>
+  <nav>
+    <div class="logo mono"><strong>RAM PORTFOLIO</strong> <span class="nav-welcome">Welcome</span></div>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#certificates">Certificates</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <span class="palette-hint mono">press / to search</span>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Menu">&#9776;</button>
+  </nav>
+</header>
+
+<!-- IDENTITY -->
+<section class="identity">
+  <div class="wrap identity-grid">
+    <div>
+      <div class="terminal glass">
+        <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+        <div class="row">$ <span class="k">whoami</span></div>
+        <div class="row">&gt; <span class="v" id="term-name"></span></div>
+        <div class="row">$ <span class="k">location</span></div>
+        <div class="row">&gt; <span class="v" id="term-location"></span></div>
+        <div class="row">$ <span class="k">contact</span></div>
+        <div class="row">&gt; <span class="v" id="term-email"></span></div>
+        <div class="row">$ <span class="k">current_focus</span></div>
+        <div class="row status"><span class="live-dot"></span>&gt; <span id="term-status">available for opportunities</span></div>
+      </div>
+      <h1 id="hero-name"></h1>
+      <div class="role-line mono" id="role-line"></div>
+      <p class="lede" id="hero-lede"></p>
+      <div class="btn-row">
+        <a href="#projects" class="btn primary">View projects</a>
+        <a href="#" id="resume-btn" class="btn ghost">Download resume</a>
+      </div>
+    </div>
+    <div class="photo-frame glass">
+      <span class="corner tl"></span><span class="corner br"></span>
+      <img id="hero-photo" src="" alt="Hem Narayan Ram">
+    </div>
+  </div>
+</section>
+
+<!-- ACTIVITY -->
+<section id="activity" class="activity-section">
+  <div class="wrap">
+    <p class="section-tag mono">// activity</p>
+    <div id="activity-card" class="activity-card glass">
+      <div>
+        <p class="mono activity-label">Recent activity</p>
+        <h2 class="section-title">Small commits, steady momentum.</h2>
+      </div>
+      <img id="github-graph" src="https://ghchart.rshah.org/46e5c2/hem-narayan" alt="GitHub contribution activity" onerror="this.closest('#activity-card').hidden=true">
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="wrap">
+    <p class="section-tag mono">// about</p>
+    <h2 class="section-title">Self-taught, project by project.</h2>
+    <div class="about-grid">
+      <div id="about-text"></div>
+      <div>
+        <div class="stat-row" id="stat-row"></div>
+        <div class="timeline" id="timeline"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="wrap">
+    <p class="section-tag mono">// stack</p>
+    <h2 class="section-title">Tools I actually build with.</h2>
+    <div class="skills-grid" id="skills-grid"></div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="wrap">
+    <p class="section-tag mono">// projects</p>
+    <h2 class="section-title">Things I've shipped.</h2>
+    <div class="projects-grid" id="projects-grid"></div>
+  </div>
+</section>
+
+<!-- CERTIFICATES -->
+<section id="certificates">
+  <div class="wrap">
+    <p class="section-tag mono">// certificates</p>
+    <h2 class="section-title">Courses & credentials.</h2>
+    <div class="cert-grid" id="cert-grid"></div>
+  </div>
+</section>
+
+<!-- SOCIALS -->
+<section id="socials">
+  <div class="wrap">
+    <p class="section-tag mono">// elsewhere</p>
+    <h2 class="section-title">Find me around the web.</h2>
+    <div class="social-grid" id="social-grid"></div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="wrap">
+    <div class="contact-panel glass">
+      <h3>Want to work together, or just say hi?</h3>
+      <p>I'm a student, but always open to small projects, collaborations, and feedback.</p>
+      <a id="contact-email" class="btn primary" href="#"></a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    &copy; <span id="year"></span> Hem Narayan Ram. Built from scratch, by hand. &middot;
+    <span id="last-updated"></span><span id="visitor-count" hidden></span> &middot;
+    <a href="admin/">Admin</a>
+  </div>
+</footer>
+
+<!-- AI ASSISTANT WIDGET -->
+<button id="ai-toggle" aria-label="Open assistant">&#128172;</button>
+<div id="ai-panel" class="glass">
+  <div class="ai-head mono">Site assistant <button onclick="document.getElementById('ai-panel').classList.remove('open')" style="background:none;border:none;color:var(--text-faint);cursor:pointer;">&times;</button></div>
+  <div class="ai-body" id="ai-body"></div>
+  <div class="ai-input">
+    <input id="ai-input" type="text" placeholder="Ask about skills, projects...">
+    <button id="ai-send">&#10148;</button>
+  </div>
+</div>
+
+<div id="gallery-modal" class="feature-modal" hidden>
+  <div class="feature-dialog gallery-dialog glass" role="dialog" aria-modal="true" aria-label="Project memories">
+    <button class="modal-close" data-close-modal aria-label="Close">&times;</button>
+    <button class="gallery-arrow gallery-prev" aria-label="Previous photo">&#8592;</button>
+    <img id="gallery-image" src="" alt="">
+    <button class="gallery-arrow gallery-next" aria-label="Next photo">&#8594;</button>
+    <p id="gallery-caption"></p>
+  </div>
+</div>
+
+<div id="case-modal" class="feature-modal" hidden>
+  <div class="feature-dialog case-dialog glass" role="dialog" aria-modal="true" aria-label="Project case study">
+    <button class="modal-close" data-close-modal aria-label="Close">&times;</button>
+    <p class="section-tag mono">// case study</p>
+    <h2 id="case-title"></h2>
+    <div class="case-sections">
+      <div><h3>Problem</h3><p id="case-problem"></p></div>
+      <div><h3>Solution</h3><p id="case-solution"></p></div>
+      <div><h3>Tech</h3><p id="case-tech"></p></div>
+      <div><h3>What I learned</h3><p id="case-learnings"></p></div>
+    </div>
+  </div>
+</div>
+
+<div id="command-palette" class="feature-modal" hidden>
+  <div class="feature-dialog palette-dialog glass" role="dialog" aria-modal="true" aria-label="Command palette">
+    <input id="palette-input" type="search" autocomplete="off" placeholder="Search sections...">
+    <div id="palette-list"></div>
+    <p class="palette-foot mono">&#8593; &#8595; navigate · Enter open · Esc close</p>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="js/firebase-config.js?v=20260920"></script>
+<script src="js/content-data.js?v=20260920"></script>
+<script src="js/content-loader.js?v=20260920"></script>
+<script src="js/bg.js?v=20260920"></script>
+<script src="js/main.js?v=20260920"></script>
+</body>
+</html>

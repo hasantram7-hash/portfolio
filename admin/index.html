@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Login — Hem Narayan Ram</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+  body{ cursor:auto; display:flex; align-items:center; justify-content:center; min-height:100vh; }
+  .login-box{ width:100%; max-width:360px; padding:36px 32px; }
+  .login-box h1{ font-size:1.3rem; margin:0 0 6px; }
+  .login-box p{ color:var(--text-faint); font-size:0.86rem; margin:0 0 24px; }
+  .field{ margin-bottom:16px; }
+  .field label{ display:block; font-size:0.8rem; color:var(--text-dim); margin-bottom:6px; font-family:'JetBrains Mono',monospace; }
+  .field input{
+    width:100%; padding:11px 14px; border-radius:8px; background:var(--field-bg);
+    border:1px solid var(--panel-border-strong); color:var(--text); font-family:inherit; font-size:0.94rem; outline:none;
+  }
+  .field input:focus{ border-color:var(--accent); }
+  #err{ color:var(--danger); font-size:0.82rem; margin-top:10px; min-height:1.2em; }
+  .login-box button{ width:100%; margin-top:8px; justify-content:center; cursor:pointer; border:none; font-family:inherit; font-size:0.95rem; }
+</style>
+</head>
+<body>
+<canvas id="net-canvas"></canvas>
+<div class="login-box glass">
+  <h1 class="mono">admin // login</h1>
+  <p>Sign in to manage portfolio content.</p>
+  <form id="login-form">
+    <div class="field">
+      <label>Email</label>
+      <input type="email" id="email" required autocomplete="username">
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" id="password" required autocomplete="current-password">
+    </div>
+    <button type="submit" class="btn primary">Sign in</button>
+    <div id="err"></div>
+  </form>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="../js/firebase-config.js"></script>
+<script src="../js/bg.js"></script>
+<script>
+  initNetwork();
+
+  if (!firebaseReady) {
+    document.getElementById("err").textContent =
+      "Firebase isn't configured yet — fill in js/firebase-config.js first.";
+  }
+
+  document.getElementById("login-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const email = document.getElementById("email").value;
+    const pass = document.getElementById("password").value;
+    const err = document.getElementById("err");
+    err.textContent = "";
+    try {
+      await auth.signInWithEmailAndPassword(email, pass);
+      window.location.href = "dashboard.html";
+    } catch (ex) {
+      err.textContent = "Login failed — check your email and password.";
+    }
+  });
+
+  // already logged in? skip straight to dashboard
+  if (firebaseReady) {
+    auth.onAuthStateChanged((user) => {
+      if (user) window.location.href = "dashboard.html";
+    });
+  }
+</script>
+</body>
+</html>

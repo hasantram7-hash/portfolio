@@ -1,0 +1,205 @@
+let CURRENT = JSON.parse(JSON.stringify(DEFAULT_CONTENT));
+
+/* ---------- auth guard ---------- */
+if (!firebaseReady) {
+  alert("Firebase isn't configured yet. Fill in js/firebase-config.js, then reload.");
+} else {
+  auth.onAuthStateChanged((user) => {
+    if (!user) window.location.href = "index.html";
+  });
+}
+
+document.getElementById("logout").addEventListener("click", async () => {
+  if (firebaseReady) await auth.signOut();
+  window.location.href = "index.html";
+});
+
+initNetwork();
+
+function applyTheme(theme) {
+  const selected = theme === "dark" ? "dark" : "light";
+  document.documentElement.setAttribute("data-theme", selected);
+  document.querySelectorAll("[data-theme-choice]").forEach(button => {
+    button.classList.toggle("active", button.dataset.themeChoice === selected);
+  });
+}
+
+document.querySelectorAll("[data-theme-choice]").forEach(button => {
+  button.addEventListener("click", () => applyTheme(button.dataset.themeChoice));
+});
+applyTheme("light");
+
+/* ---------- generic repeatable row builder ---------- */
+function buildRow(containerId, fields, values, removeCb) {
+  const item = document.createElement("div");
+  item.className = "repeat-item";
+  item.innerHTML = `
+    <button class="rm" onclick="this.parentElement.remove()">remove ✕</button>
+    ${fields.map(f => `
+      <div class="field">
+        <label>${f.label}</label>
+        ${f.type === "textarea"
+          ? `<textarea rows="2" data-key="${f.key}">${values[f.key] || ""}</textarea>`
+          : `<input data-key="${f.key}" value="${(values[f.key] || "").toString().replace(/"/g, "&quot;")}">`}
+      </div>
+    `).join("")}
+  `;
+  document.getElementById(containerId).appendChild(item);
+  return item;
+}
+
+function readRows(containerId, keys) {
+  const items = document.querySelectorAll(`#${containerId} .repeat-item`);
+  return Array.from(items).map(item => {
+    const obj = {};
+    keys.forEach(k => {
+      const el = item.querySelector(`[data-key="${k}"]`);
+      obj[k] = el ? el.value : "";
+    });
+    return obj;
+  });
+}
+
+/* ---------- section-specific add functions ---------- */
+function addStat(v = { value: "", label: "" }) {
+  buildRow("stats-list", [{ key: "value", label: "Value (e.g. 17)" }, { key: "label", label: "Label (e.g. years old)" }], v);
+}
+function addTimeline(v = { year: "", title: "", text: "" }) {
+  buildRow("timeline-list", [
+    { key: "year", label: "Year / period" },
+    { key: "title", label: "Title" },
+    { key: "text", label: "Description", type: "textarea" }
+  ], v);
+}
+function addSkill(v = { name: "", level: 70 }) {
+  buildRow("skills-list", [{ key: "name", label: "Skill name" }, { key: "level", label: "Level (0-100)" }], v);
+}
+function addGalleryPhoto(containerId, v = { url: "", caption: "" }) {
+  buildRow(containerId, [
+    { key: "url", label: "Photo URL" },
+    { key: "caption", label: "Caption" }
+  ], v);
+}
+function addProject(v = { title: "", description: "", tags: "", link: "", github: "", gallery: [], problem: "", solution: "", techDetails: "", learnings: "" }) {
+  const item = buildRow("projects-list", [
+    { key: "title", label: "Title" },
+    { key: "description", label: "Description", type: "textarea" },
+    { key: "tags", label: "Tags (comma-separated)" },
+    { key: "link", label: "Live demo URL" },
+    { key: "github", label: "GitHub URL (optional)" },
+    { key: "problem", label: "Problem (optional)", type: "textarea" },
+    { key: "solution", label: "Solution (optional)", type: "textarea" },
+    { key: "techDetails", label: "Tech details (optional)", type: "textarea" },
+    { key: "learnings", label: "What I learned (optional)", type: "textarea" }
+  ], { ...v, tags: Array.isArray(v.tags) ? v.tags.join(", ") : v.tags });
+  const galleryId = `gallery-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  const gallery = document.createElement("div");
+  gallery.className = "project-gallery-editor";
+  gallery.innerHTML = `<label>Gallery photos</label><div id="${galleryId}"></div><button type="button" class="add-btn">+ Add photo</button>`;
+  item.appendChild(gallery);
+  (v.gallery || []).forEach(photo => addGalleryPhoto(galleryId, photo));
+  gallery.querySelector(".add-btn").addEventListener("click", () => addGalleryPhoto(galleryId));
+}
+function addCert(v = { title: "", issuer: "", url: "" }) {
+  buildRow("certs-list", [
+    { key: "title", label: "Certificate title" },
+    { key: "issuer", label: "Issuer" },
+    { key: "url", label: "Verify URL (optional)" }
+  ], v);
+}
+function addSocial(v = { platform: "", url: "", icon: "" }) {
+  buildRow("socials-list", [
+    { key: "platform", label: "Platform name" },
+    { key: "url", label: "URL" },
+    { key: "icon", label: "Icon code (gh / li / yt / tk / fb)" }
+  ], v);
+}
+
+/* ---------- populate form from content ---------- */
+function populate(content) {
+  CURRENT = content;
+  applyTheme(content.theme);
+  document.getElementById("p-name").value = content.profile.name;
+  document.getElementById("p-role").value = content.profile.role;
+  document.getElementById("p-location").value = content.profile.location;
+  document.getElementById("p-email").value = content.profile.email;
+  document.getElementById("p-photo").value = content.profile.photo;
+  document.getElementById("p-resume").value = content.profile.resumeUrl || "";
+  document.getElementById("p-tagline").value = content.profile.tagline;
+  document.getElementById("p-status").value = content.status?.text || "";
+  document.getElementById("a-paragraphs").value = content.about.paragraphs.join("\n");
+
+  content.about.stats.forEach(s => addStat(s));
+  content.timeline.forEach(t => addTimeline(t));
+  content.skills.forEach(s => addSkill(s));
+  content.projects.forEach(p => addProject(p));
+  content.certificates.forEach(c => addCert(c));
+  content.socials.forEach(s => addSocial(s));
+}
+
+function readProjects() {
+  return Array.from(document.querySelectorAll("#projects-list > .repeat-item")).map(item => {
+    const project = {};
+    ["title", "description", "tags", "link", "github", "problem", "solution", "techDetails", "learnings"].forEach(key => {
+      project[key] = item.querySelector(`[data-key="${key}"]`)?.value || "";
+    });
+    project.tags = project.tags.split(",").map(tag => tag.trim()).filter(Boolean);
+    const galleryList = item.querySelector(".project-gallery-editor > div");
+    project.gallery = galleryList ? readRows(galleryList.id, ["url", "caption"]) : [];
+    return project;
+  });
+}
+
+/* ---------- gather + save ---------- */
+async function saveAll() {
+  const status = document.getElementById("save-status");
+  status.textContent = "Saving...";
+  const data = {
+    theme: document.querySelector("[data-theme-choice].active")?.dataset.themeChoice || "light",
+    profile: {
+      name: document.getElementById("p-name").value,
+      role: document.getElementById("p-role").value,
+      location: document.getElementById("p-location").value,
+      email: document.getElementById("p-email").value,
+      photo: document.getElementById("p-photo").value,
+      resumeUrl: document.getElementById("p-resume").value,
+      tagline: document.getElementById("p-tagline").value
+    },
+    status: {
+      text: document.getElementById("p-status").value,
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    },
+    about: {
+      paragraphs: document.getElementById("a-paragraphs").value.split("\n").filter(Boolean),
+      stats: readRows("stats-list", ["value", "label"])
+    },
+    timeline: readRows("timeline-list", ["year", "title", "text"]),
+    skills: readRows("skills-list", ["name", "level"]).map(s => ({ ...s, level: Number(s.level) || 0 })),
+    projects: readProjects(),
+    certificates: readRows("certs-list", ["title", "issuer", "url"]),
+    socials: readRows("socials-list", ["platform", "url", "icon"]),
+    lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+  };
+
+  try {
+    if (!firebaseReady) throw new Error("Firebase not configured");
+    await db.collection("portfolio").doc("site").set(data, { merge: true });
+    status.textContent = "Saved ✓ — live on the site now.";
+  } catch (e) {
+    console.error(e);
+    status.textContent = "Save failed — check Firebase config / rules.";
+  }
+  setTimeout(() => (status.textContent = ""), 4000);
+}
+
+/* ---------- init ---------- */
+(async function init() {
+  if (firebaseReady) {
+    try {
+      const doc = await db.collection("portfolio").doc("site").get();
+      populate(doc.exists ? { ...DEFAULT_CONTENT, ...doc.data() } : DEFAULT_CONTENT);
+      return;
+    } catch (e) { console.warn(e); }
+  }
+  populate(DEFAULT_CONTENT);
+})();
