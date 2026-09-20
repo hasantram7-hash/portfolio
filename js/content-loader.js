@@ -56,7 +56,7 @@ window.getContent = async function () {
   if (!firebaseReady) return DEFAULT_CONTENT;
 
   try {
-    const candidateDocs = ["site", "hero", "about", "profile", "portfolio"];
+    const candidateDocs = ["content", "site", "hero", "about", "profile", "portfolio"];
     let merged = { ...DEFAULT_CONTENT };
 
     for (const docId of candidateDocs) {

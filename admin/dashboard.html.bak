@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard — Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+  body{ cursor:auto; padding-bottom:80px; }
+  .dash-header{
+    position:sticky; top:0; z-index:100; backdrop-filter:blur(14px);
+    background:var(--nav-bg); border-bottom:1px solid var(--panel-border);
+    display:flex; justify-content:space-between; align-items:center; padding:16px 24px;
+  }
+  .dash-header h1{ font-size:1rem; margin:0; font-family:'JetBrains Mono',monospace; }
+  .dash-wrap{ max-width:900px; margin:0 auto; padding:32px 24px; }
+  .panel{ padding:26px; margin-bottom:28px; }
+  .panel h2{ font-size:1.05rem; margin:0 0 20px; display:flex; justify-content:space-between; align-items:center; }
+  .row2{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .field{ margin-bottom:14px; }
+  .field label{ display:block; font-size:0.78rem; color:var(--text-dim); margin-bottom:6px; font-family:'JetBrains Mono',monospace; }
+  .field input, .field textarea{
+    width:100%; padding:10px 12px; border-radius:8px; background:var(--field-bg);
+    border:1px solid var(--panel-border-strong); color:var(--text); font-family:inherit; font-size:0.9rem; outline:none; resize:vertical;
+  }
+  .field input:focus, .field textarea:focus{ border-color:var(--accent); }
+  .repeat-item{ border:1px solid var(--panel-border); border-radius:10px; padding:16px; margin-bottom:12px; position:relative; }
+  .repeat-item .rm{
+    position:absolute; top:10px; right:10px; background:none; border:none; color:var(--danger);
+    cursor:pointer; font-size:0.85rem; font-family:'JetBrains Mono',monospace;
+  }
+  .add-btn{
+    background:none; border:1px dashed var(--panel-border-strong); color:var(--accent);
+    padding:10px 16px; border-radius:8px; cursor:pointer; font-size:0.85rem; font-family:inherit; width:100%;
+  }
+  .save-bar{
+    position:fixed; bottom:0; left:0; right:0; z-index:200; padding:16px 24px;
+    background:var(--save-bar-bg); backdrop-filter:blur(14px); border-top:1px solid var(--panel-border);
+    display:flex; justify-content:center; gap:14px; align-items:center;
+  }
+  .save-bar button{ border:none; cursor:pointer; font-family:inherit; font-size:0.95rem; }
+  #save-status{ font-size:0.82rem; color:var(--text-faint); font-family:'JetBrains Mono',monospace; }
+  .logout-btn{ background:none; border:1px solid var(--panel-border-strong); color:var(--text-dim); padding:8px 14px; border-radius:8px; cursor:pointer; font-size:0.85rem; }
+  .theme-switch{ display:flex; gap:8px; margin:-4px 0 20px; }
+  .theme-choice{ flex:1; padding:10px 14px; border:1px solid var(--panel-border-strong); border-radius:8px; background:var(--field-bg); color:var(--text-dim); cursor:pointer; font:0.86rem 'Space Grotesk',sans-serif; }
+  .theme-choice.active{ background:var(--accent-dim); border-color:var(--accent); color:var(--accent); }
+</style>
+</head>
+<body>
+<canvas id="net-canvas"></canvas>
+
+<div class="dash-header">
+  <h1>admin // dashboard</h1>
+  <button class="logout-btn" id="logout">Log out</button>
+</div>
+
+<div class="dash-wrap">
+
+  <div class="panel glass">
+    <h2>Appearance</h2>
+    <div class="theme-switch" role="group" aria-label="Live site theme">
+      <button type="button" class="theme-choice" data-theme-choice="light">Light</button>
+      <button type="button" class="theme-choice" data-theme-choice="dark">Dark</button>
+    </div>
+  </div>
+
+  <div class="panel glass">
+    <h2>Profile</h2>
+    <div class="row2">
+      <div class="field"><label>Full name</label><input id="p-name"></div>
+      <div class="field"><label>Role / title</label><input id="p-role"></div>
+      <div class="field"><label>Location</label><input id="p-location"></div>
+      <div class="field"><label>Email</label><input id="p-email"></div>
+      <div class="field"><label>Photo URL</label><input id="p-photo" placeholder="assets/profile.jpg or a hosted image URL"></div>
+      <div class="field"><label>Resume URL (optional)</label><input id="p-resume"></div>
+    </div>
+    <div class="field"><label>Tagline (shown under your name)</label><textarea id="p-tagline" rows="2"></textarea></div>
+    <div class="field"><label>Current status</label><input id="p-status" placeholder="Currently building: Project X"></div>
+  </div>
+
+  <div class="panel glass">
+    <h2>About</h2>
+    <div class="field"><label>About paragraphs — one per line</label><textarea id="a-paragraphs" rows="6"></textarea></div>
+    <div id="stats-list"></div>
+    <button class="add-btn" onclick="addStat()">+ Add stat (e.g. "17" / "years old")</button>
+  </div>
+
+  <div class="panel glass">
+    <h2>Timeline</h2>
+    <div id="timeline-list"></div>
+    <button class="add-btn" onclick="addTimeline()">+ Add timeline entry</button>
+  </div>
+
+  <div class="panel glass">
+    <h2>Skills</h2>
+    <div id="skills-list"></div>
+    <button class="add-btn" onclick="addSkill()">+ Add skill</button>
+  </div>
+
+  <div class="panel glass">
+    <h2>Projects</h2>
+    <div id="projects-list"></div>
+    <button class="add-btn" onclick="addProject()">+ Add project</button>
+  </div>
+
+  <div class="panel glass">
+    <h2>Certificates</h2>
+    <div id="certs-list"></div>
+    <button class="add-btn" onclick="addCert()">+ Add certificate</button>
+  </div>
+
+  <div class="panel glass">
+    <h2>Social links</h2>
+    <div id="socials-list"></div>
+    <button class="add-btn" onclick="addSocial()">+ Add social link</button>
+  </div>
+
+</div>
+
+<div class="save-bar">
+  <span id="save-status"></span>
+  <button class="btn primary" onclick="saveAll()">Save all changes</button>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="../js/firebase-config.js"></script>
+<script src="../js/content-data.js"></script>
+<script src="../js/bg.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>
