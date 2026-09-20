@@ -186,10 +186,20 @@ nav{ display:flex; align-items:center; justify-content:space-between; padding:16
   background: var(--panel);
   border: 1px solid var(--panel-border);
   border-radius: var(--radius);
-  backdrop-filter: blur(16px) saturate(140%);
-  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.3s, box-shadow 0.3s;
 }
-.glass:hover{ border-color: var(--panel-border-strong); }
+.glass:hover{
+  border-color: var(--panel-border-strong);
+  box-shadow: 0 12px 40px var(--accent-shadow);
+}
+[data-theme='light'] .glass{
+  background: rgba(255, 255, 255, 0.65);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+}
+[data-theme='light'] .glass:hover{ box-shadow: 0 12px 40px rgba(14, 156, 130, 0.15); }
 
 /* ---------- identity / hero ---------- */
 .identity{
