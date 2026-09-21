@@ -1,14 +1,23 @@
-
 const firebaseConfig = {
   apiKey: "AIzaSyBdpyhK9C5yDDuEAvMPreU6HUgT2PdFMsI",
   authDomain: "hem-portfolio-3292a.firebaseapp.com",
   projectId: "hem-portfolio-3292a",
   storageBucket: "hem-portfolio-3292a.firebasestorage.app",
   messagingSenderId: "494670409826",
-  appId: "1:494670409826:web:25903a48ec04c86c54213b",
-  measurementId: "G-73VWZGLKL9"
+  appId: "1:494670409826:web:25903a48ec04c86c54213b"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+let firebaseReady = false;
+let db = null;
+let auth = null;
+
+try {
+  if (firebaseConfig.apiKey && !firebaseConfig.apiKey.startsWith("PASTE")) {
+    firebase.initializeApp(firebaseConfig);
+    db = firebase.firestore();
+    auth = firebase.auth();
+    firebaseReady = true;
+  }
+} catch (e) {
+  console.warn("Firebase not initialized — using default local content.", e);
+}
