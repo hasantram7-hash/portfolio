@@ -12,8 +12,8 @@ const firebaseConfig = {
   projectId: "hem-portfolio-3292a",
   storageBucket: "hem-portfolio-3292a.firebasestorage.app",
   messagingSenderId: "494670409826",
-  appId: "1:494670409826:web:5bf400cc9f3044ca54213b",
-  measurementId: "G-0JYT73QJPG"
+  appId: "1:494670409826:web:25903a48ec04c86c54213b",
+  measurementId: "G-73VWZGLKL9"
 };
 
 // Initialize Firebase
